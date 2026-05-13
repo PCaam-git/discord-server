@@ -57,7 +57,7 @@ export class UsersService {
         throw new ConflictException('El email ya está registrado');
       }
       throw new InternalServerErrorException('Error al crear el usuario');
-}
+    }
   }
 
   async update(id: number, data: Partial<User>): Promise<User> {

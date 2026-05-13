@@ -21,7 +21,11 @@ export class Server {
   @Column({ nullable: true, length: 255 })
   description: string;
 
-  @ManyToOne(() => User, (user) => user.servers, { onDelete: 'CASCADE' })
+  // Modificado para permitir servidores sin dueño en esta primera fase sin autenticación
+  @ManyToOne(() => User, (user) => user.servers, {
+    onDelete: 'CASCADE',
+    nullable: true,
+  })
   owner: User;
 
   @OneToMany(() => Channel, (channel) => channel.server)
