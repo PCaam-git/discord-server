@@ -11,7 +11,6 @@ async function boostrap() {
 
   // Las rutas se establecerán a partir de /api
   console.log('Discord Server API running on http://localhost:${port}/api');
-
 }
 
 boostrap();
