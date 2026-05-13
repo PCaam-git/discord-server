@@ -1,5 +1,5 @@
-import { Message } from '../../messages/entities/message.entity';
-import { Server } from '../../servers/entities/server.entity';
+import { Message } from '../messages/message.entity';
+import { Server } from '../servers/server.entity';
 import {
   Column,
   CreateDateColumn,
