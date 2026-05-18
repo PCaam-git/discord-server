@@ -17,7 +17,7 @@ type CreateChannelData = {
 // Para actualización, todos los campos son opcionales
 type UpdateChannelData = Partial<CreateChannelData>;
 
-// ── Servicio para gestión de canales ──
+// -- Servicio para gestión de canales --
 @Injectable()
 export class ChannelsService {
   constructor(
@@ -27,7 +27,7 @@ export class ChannelsService {
     private readonly serversService: ServersService,
   ) {}
 
-  // ── Consultas básicas ──
+  // -- Consultas básicas --
 
   // Obtener todos los canales de un servidor específico
   findAllByServer(serverId: number): Promise<Channel[]> {
@@ -52,7 +52,7 @@ export class ChannelsService {
     return channel;
   }
 
-  // ── QueryBuilder: canales con nombre o tipo coincidente ──
+  // -- QueryBuilder: canales con nombre o tipo coincidente --
   search(query: string): Promise<Channel[]> {
     return this.channelsRepository
       .createQueryBuilder('channel')
@@ -64,7 +64,7 @@ export class ChannelsService {
       .getMany();
   }
 
-  // ── Mutaciones ──
+  // -- Peticiones: crear, editar, eliminar --
 
   // Crear un nuevo canal dentro de un servidor específico
   // Create recibe el ID del servidor. Comprueba que el servidor existe usando ServersService
