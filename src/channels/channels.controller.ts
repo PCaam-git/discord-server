@@ -10,14 +10,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateChannelDto } from './dto/create-channel.dto';
+import { UpdateChannelDto } from './dto/update-channel.dto';
 import { ChannelsService } from './channels.service';
-
-type CreateChannelBody = {
-  name: string;
-  type?: string;
-};
-
-type UpdateChannelBody = Partial<CreateChannelBody>;
 
 // No se especifica ruta base para poder usar /:serverId/channels y /channels/:id
 @Controller()
@@ -33,7 +28,7 @@ export class ChannelsController {
   // Crea un nuevo canal dentro de un servidor específico
   @Post('servers/:serverId/channels')
   @HttpCode(HttpStatus.CREATED)
-  create(@Param('serverId') serverId: string, @Body() body: CreateChannelBody) {
+  create(@Param('serverId') serverId: string, @Body() body: CreateChannelDto) {
     return this.channelsService.create(+serverId, body);
   }
 
@@ -51,7 +46,7 @@ export class ChannelsController {
 
   // Actualiza un canal por su ID
   @Patch('channels/:id')
-  update(@Param('id') id: string, @Body() body: UpdateChannelBody) {
+  update(@Param('id') id: string, @Body() body: UpdateChannelDto) {
     return this.channelsService.update(+id, body);
   }
 

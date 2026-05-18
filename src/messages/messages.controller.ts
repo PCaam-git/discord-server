@@ -10,16 +10,9 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { CreateMessageDto } from './dto/create-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 import { MessagesService } from './messages.service';
-
-type CreateMessageBody = {
-  content: string;
-  authorId: number;
-};
-
-type UpdateMessageBody = Partial<{
-  content: string;
-}>;
 
 @Controller()
 export class MessagesController {
@@ -34,7 +27,7 @@ export class MessagesController {
   @HttpCode(HttpStatus.CREATED)
   create(
     @Param('channelId') channelId: string,
-    @Body() body: CreateMessageBody,
+    @Body() body: CreateMessageDto,
   ) {
     return this.messagesService.create(+channelId, body);
   }
@@ -50,7 +43,7 @@ export class MessagesController {
   }
 
   @Patch('messages/:id')
-  update(@Param('id') id: string, @Body() body: UpdateMessageBody) {
+  update(@Param('id') id: string, @Body() body: UpdateMessageDto) {
     return this.messagesService.update(+id, body);
   }
 

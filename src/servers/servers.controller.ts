@@ -10,21 +10,15 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { Server } from './server.entity';
+import { CreateServerDto } from './dto/create-server.dto';
+import { UpdateServerDto } from './dto/update-server.dto';
 import { ServersService } from './servers.service';
-
-type CreateServerBody = {
-  name: string;
-  description?: string;
-};
-
-type UpdateServerBody = Partial<CreateServerBody>;
 
 @Controller('servers')
 export class ServersController {
   constructor(private readonly serversService: ServersService) {}
 
-  // Listar todos lso servidores. También filtra por nombre
+  // Listar todos los servidores. También filtra por nombre
   @Get()
   findAll(@Query('name') name?: string) {
     return this.serversService.findAll(name);
@@ -45,13 +39,13 @@ export class ServersController {
   // Crear un nuevo servidor
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: CreateServerBody) {
+  create(@Body() body: CreateServerDto) {
     return this.serversService.create(body);
   }
 
   // Editar solo nombre o descripción
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateServerBody) {
+  update(@Param('id') id: string, @Body() body: UpdateServerDto) {
     return this.serversService.update(+id, body);
   }
 
