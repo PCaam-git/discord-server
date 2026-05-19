@@ -34,6 +34,10 @@ export class UsersService {
     return user;
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOneBy({ email });
+  }
+
   // ── QueryBuilder: usuarios con username o email coincidente ──
   search(query: string): Promise<User[]> {
     return this.usersRepository
