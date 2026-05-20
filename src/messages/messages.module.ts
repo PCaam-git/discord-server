@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from '../auth/auth.module';
 import { ChannelsModule } from '../channels/channels.module';
 import { UsersModule } from '../users/users.module';
 import { Message } from './message.entity';
@@ -7,7 +8,12 @@ import { MessagesController } from './messages.controller';
 import { MessagesService } from './messages.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Message]), ChannelsModule, UsersModule],
+  imports: [
+    TypeOrmModule.forFeature([Message]),
+    ChannelsModule,
+    UsersModule,
+    AuthModule,
+  ],
   controllers: [MessagesController],
   providers: [MessagesService],
   exports: [MessagesService],
