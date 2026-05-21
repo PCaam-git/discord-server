@@ -20,7 +20,7 @@ export class User {
   @Column({ unique: true, length: 150 })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @OneToMany(() => Server, (server) => server.owner)

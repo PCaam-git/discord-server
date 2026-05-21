@@ -35,7 +35,11 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOneBy({ email });
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password') // incluir el campo password
+      .where('user.email = :email', { email })
+      .getOne();
   }
 
   // ── QueryBuilder: usuarios con username o email coincidente ──

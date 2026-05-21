@@ -12,7 +12,6 @@ import { Message } from './message.entity';
 
 type CreateMessageData = {
   content: string;
-  authorId: number;
 };
 
 type UpdateMessageData = Partial<{
@@ -64,17 +63,23 @@ export class MessagesService {
   }
 
   // -- Operaciones de creación, actualización y eliminación --
-  async create(channelId: number, data: CreateMessageData): Promise<Message> {
-    if (!data.content) {
-      throw new BadRequestException('El campo "content" es obligatorio');
+  async create(
+    channelId: number,
+    data: CreateMessageData | undefined,
+    authorId: number,
+  ): Promise<Message> {
+    if (!data) {
+      throw new BadRequestException(
+        'Completar el body de la petición es obligatorio',
+      );
     }
 
-    if (!data.authorId) {
-      throw new BadRequestException('El campo "authorId" es obligatorio');
+    if (!data.content) {
+      throw new BadRequestException('El campo content es obligatorio');
     }
 
     const channel = await this.channelsService.findOne(channelId);
-    const author = await this.usersService.findOne(data.authorId);
+    const author = await this.usersService.findOne(authorId);
 
     try {
       const message = this.messagesRepository.create({
