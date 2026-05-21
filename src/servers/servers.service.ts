@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -7,12 +6,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Server } from './server.entity';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class ServersService {
   constructor(
     @InjectRepository(Server)
     private readonly serversRepository: Repository<Server>,
+    private readonly usersService: UsersService,
   ) {}
 
   // ── Consultas básicas ───
@@ -59,10 +60,15 @@ export class ServersService {
   }
 
   // ── Mutaciones ───
-  async create(data: Partial<Server>): Promise<Server> {
+  async create(data: Partial<Server>, ownerId: number): Promise<Server> {
+    const owner = await this.usersService.findOne(ownerId);
+
     try {
-      // Verificar si ya existe un servidor con el mismo nombre para evitar duplicados
-      const server = this.serversRepository.create(data);
+      const server = this.serversRepository.create({
+        ...data,
+        owner,
+      });
+
       return await this.serversRepository.save(server);
     } catch {
       throw new InternalServerErrorException('Error al crear el servidor');

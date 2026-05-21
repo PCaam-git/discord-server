@@ -9,12 +9,14 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateServerDto } from './dto/create-server.dto';
 import { UpdateServerDto } from './dto/update-server.dto';
 import { ServersService } from './servers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { AuthenticatedRequest } from '../auth/guards/jwt-auth.guard';
 
 @Controller('servers')
 export class ServersController {
@@ -42,8 +44,8 @@ export class ServersController {
   @Post()
   @UseGuards(JwtAuthGuard) // Protege la ruta con JWT
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() body: CreateServerDto) {
-    return this.serversService.create(body);
+  create(@Body() body: CreateServerDto, @Req() request: AuthenticatedRequest) {
+    return this.serversService.create(body, request.user.sub);
   }
 
   // Editar solo nombre o descripción

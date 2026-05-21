@@ -9,12 +9,14 @@ import {
   Patch,
   Post,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { MessagesService } from './messages.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import type { AuthenticatedRequest } from '../auth/guards/jwt-auth.guard';
 
 @Controller()
 export class MessagesController {
@@ -41,8 +43,9 @@ export class MessagesController {
   create(
     @Param('channelId') channelId: string,
     @Body() body: CreateMessageDto,
+    @Req() request: AuthenticatedRequest,
   ) {
-    return this.messagesService.create(+channelId, body);
+    return this.messagesService.create(+channelId, body, request.user.sub);
   }
 
   @Patch('messages/:id')
