@@ -43,7 +43,7 @@ export class MessagesService {
     });
 
     if (!message) {
-      throw new NotFoundException('Mensaje con id ${id} no encontrado');
+      throw new NotFoundException(`Mensaje con id ${id} no encontrado`);
     }
 
     return message;

@@ -21,7 +21,8 @@ export class Server {
   @Column({ nullable: true, length: 255 })
   description: string;
 
-  // Modificado para permitir servidores sin dueño en esta primera fase sin autenticación
+  // Se mantiene nullable porque existen datos iniciales creados antes de añadir autenticación.
+  // Los nuevos servidores se crean asignando el usuario autenticado como propietario.
   @ManyToOne(() => User, (user) => user.servers, {
     onDelete: 'CASCADE',
     nullable: true,

@@ -8,6 +8,7 @@ async function boostrap() {
 
   app.setGlobalPrefix('api');
 
+  // Configuración global de validación de datos
   app.useGlobalPipes(
     new ValidationPipe({
       // Solo permite las propiedades definidas en los DTOs
@@ -19,6 +20,7 @@ async function boostrap() {
     }),
   );
 
+  // Configuración de Swagger para documentación automática de la API
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Discord Server API')
     .setDescription(
@@ -35,7 +37,7 @@ async function boostrap() {
   await app.listen(port);
 
   // Las rutas se establecerán a partir de /api
-  console.log('Discord Server API running on http://localhost:${port}/api');
+  console.log(`Discord Server API running on http://localhost:${port}/api`);
   console.log(`Swagger docs available on http://localhost:${port}/api/docs`);
 }
 

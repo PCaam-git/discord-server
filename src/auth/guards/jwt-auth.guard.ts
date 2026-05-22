@@ -8,9 +8,11 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 
 export type JwtPayload = {
+  // idenficiador del usuario autenticado.
   sub: number;
   username: string;
   email: string;
+  // fechas de emisión y expiración que añade JWT al firmar el token.
   iat?: number;
   exp?: number;
 };
@@ -23,8 +25,11 @@ export type AuthenticatedRequest = Request & {
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
+  // NestJS ejecuta este método antes de entrar en una ruta protegida.
   canActivate(context: ExecutionContext): boolean {
+    // Obtiene la petición HTTP original sobre la que se aplicó el Guard.
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    // Extrae el token enviado en el header Authorization.
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
@@ -32,7 +37,9 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
+      // Verifica firma y caducidad del JWT.
       const payload = this.jwtService.verify<JwtPayload>(token);
+      // Guarda la identidad validada para que el controlador pueda usar request.user.sub.
       request.user = payload;
 
       return true;
@@ -41,6 +48,7 @@ export class JwtAuthGuard implements CanActivate {
     }
   }
 
+  // solo permite tokens enviados como "Bearer <token>" en el header Authorization.
   private extractTokenFromHeader(request: Request): string | undefined {
     const authorization = request.headers.authorization;
 

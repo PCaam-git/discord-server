@@ -26,15 +26,19 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  // Registra al usuario y devuelve directamente un token para poder autenticarse.
   async register(registerUserDto: RegisterUserDto): Promise<AuthResponse> {
+    // se comprueba si el email ya existe
     const existingUser = await this.usersService.findByEmail(
       registerUserDto.email,
     );
 
+    // email duplicado: 409 Conflict
     if (existingUser) {
       throw new ConflictException('El email ya está registrado');
     }
 
+    // la contraseña se cifra con bcrypt
     const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
 
     const user = await this.usersService.create({
@@ -45,14 +49,16 @@ export class AuthService {
 
     return this.buildAuthResponse(user);
   }
-
+// Comprueba las credenciales y genera el token de acceso.
   async login(loginDto: LoginDto): Promise<AuthResponse> {
     const user = await this.usersService.findByEmail(loginDto.email);
 
+    // no se indica si el fallo proviene del email o de la contraseña para no dar pistas a posibles atacantes.
     if (!user) {
       throw new UnauthorizedException('Credenciales incorrectas');
     }
 
+    // compara la contraseña proporcionada con el hash almacenado en la BD
     const validPassword = await bcrypt.compare(
       loginDto.password,
       user.password,
@@ -65,6 +71,7 @@ export class AuthService {
     return this.buildAuthResponse(user);
   }
 
+  // Construye la respuesta de autenticación con el token JWT y los datos del usuario (sin contraseña).
   private buildAuthResponse(user: User): AuthResponse {
     const payload = {
       sub: user.id,
@@ -74,6 +81,7 @@ export class AuthService {
 
     return {
       accessToken: this.jwtService.sign(payload),
+      // la respuesta excluye la contraseña
       user: {
         id: user.id,
         username: user.username,

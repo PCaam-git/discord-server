@@ -45,6 +45,7 @@ export class MessagesController {
     @Body() body: CreateMessageDto,
     @Req() request: AuthenticatedRequest,
   ) {
+    // request.user.sub contiene el ID del usuario autenticado gracias al JwtAuthGuard.
     return this.messagesService.create(+channelId, body, request.user.sub);
   }
 
